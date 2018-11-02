@@ -2,6 +2,8 @@
 #define __LIST_H__
 
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 
 struct list_node
 {
@@ -76,7 +78,8 @@ struct list_api
      * @brief : splice @list before @node
      */
     void (*splice_before)(struct list_node *list,
-				struct list_node *node);                
+				struct list_node *node);    
+    uint32_t (*node_count)(struct list_node *head);            
 };
 
 extern struct list_api  list;

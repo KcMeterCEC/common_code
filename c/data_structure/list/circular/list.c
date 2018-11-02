@@ -136,6 +136,17 @@ static  void list_splice_before(struct list_node *list,
     }
 		
 }
+static uint32_t list_node_count(struct list_node *head)
+{
+    struct list_node *node = NULL;
+    uint32_t count = 0;
+    list_for_each(node, head)
+    {
+        count += 1;
+    }
+
+    return count;
+}
 
 void list_str_init(void)
 {
@@ -154,4 +165,5 @@ void list_str_init(void)
     list.cut_position = list_cut_position;
     list.splice_after = list_splice_after;
     list.splice_before = list_splice_before;
+    list.node_count = list_node_count;
 }
