@@ -64,6 +64,8 @@ struct unidir_list_api
     void (*init_obj)(struct list_node *head);
     void (*insert)(struct list_node *current_node, struct list_node *new_node);
     void (*remove_next)(struct list_node *current_node);
+    void (*reverse)(struct list_node *head);
+    struct list_node *(*find_loop)(struct list_node *head);
 };
 
 extern struct unidir_list_api undir_list;

@@ -6,7 +6,7 @@
 
 #define NAME_LEN    (10)
 
-#define JOSEPHUS_PROBLEM
+// #define JOSEPHUS_PROBLEM
 
 #ifdef JOSEPHUS_PROBLEM
 typedef struct 
@@ -130,11 +130,42 @@ int main(int argc, char *argv[])
         .age = 15,
     };   
     undir_list.insert(&student_head, &may.node);    
-    print_list();   
+    print_list(); 
+
+    printf(">>> reverse:\n");
+    undir_list.reverse(&student_head);  
+    print_list();
 
     printf(">>> delete students: wuqing\n");
-    undir_list.remove_next(&may.node);
+    undir_list.remove_next(&lilei.node);
     print_list(); 
+
+
+    printf(">>> looking for loop:\n");
+    student_obj tom = 
+    {
+        .name = "tom",
+        .age = 15,
+    };   
+    undir_list.insert(&student_head, &tom.node);  
+    student_obj jack = 
+    {
+        .name = "jack",
+        .age = 15,
+    };   
+    undir_list.insert(&student_head, &jack.node); 
+    print_list();  
+    may.node.next = &(tom.node);    
+    struct list_node *loop = undir_list.find_loop(&student_head);
+    if(loop != NULL)
+    {
+        student_obj *entry = unidir_list_entry(loop, student_obj, node);
+        printf("loop entry -> %s\n", entry->name);
+    } 
+    else
+    {
+        printf("I don't have loop!\n");
+    }
 #endif    
 
     return 0;
