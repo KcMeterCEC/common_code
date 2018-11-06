@@ -6,7 +6,7 @@
 
 struct stack_array_api stack_array;
 
-static bool stack_array_create_obj(struct strack_obj *obj)
+static bool stack_array_create_obj(struct stack_obj *obj)
 {
     bool ret = true;
 
@@ -17,7 +17,7 @@ static bool stack_array_create_obj(struct strack_obj *obj)
 
     return ret;
 }
-static bool stack_array_push(struct strack_obj *obj, uint8_t *buf)
+static bool stack_array_push(struct stack_obj *obj, uint8_t *buf)
 {
     bool ret = true;
     if(obj->index >= obj->count)
@@ -34,7 +34,7 @@ static bool stack_array_push(struct strack_obj *obj, uint8_t *buf)
 quick_exit:
     return ret;
 }
-static bool stack_array_pop(struct strack_obj *obj, uint8_t *buf)
+static bool stack_array_pop(struct stack_obj *obj, uint8_t *buf)
 {
     bool ret = true;
     if(obj->index == 0)

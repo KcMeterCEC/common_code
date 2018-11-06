@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-struct strack_obj  student;
+struct stack_obj  student;
 
 void print_buf(void)
 {

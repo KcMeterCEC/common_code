@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-struct strack_obj 
+struct stack_obj 
 {
     uint32_t    size;
     uint32_t    count;
@@ -15,9 +15,9 @@ struct strack_obj
 
 struct stack_array_api
 {
-    bool (*create_obj)(struct strack_obj *obj);
-    bool (*push)(struct strack_obj *obj, uint8_t *buf);
-    bool (*pop)(struct strack_obj *obj, uint8_t *buf);
+    bool (*create_obj)(struct stack_obj *obj);
+    bool (*push)(struct stack_obj *obj, uint8_t *buf);
+    bool (*pop)(struct stack_obj *obj, uint8_t *buf);
 };
 
 extern struct stack_array_api stack_array;

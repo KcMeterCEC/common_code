@@ -96,7 +96,14 @@ struct list_node *undir_list_find_loop(struct list_node *head)
 
     return loop;
 }
-
+static bool unidir_list_is_empty(struct list_node *head)
+{
+    #ifdef RING_LIST
+    return head->next == head;
+    #else 
+    return head->next == NULL;
+    #endif
+}
 void unidir_list_str_init(void)
 {
     undir_list.init_obj = unidir_list_init_obj;
@@ -104,4 +111,5 @@ void unidir_list_str_init(void)
     undir_list.insert = unidir_list_insert;
     undir_list.reverse = undir_list_reverse;
     undir_list.find_loop = undir_list_find_loop;
+    undir_list.is_empty = unidir_list_is_empty;
 }

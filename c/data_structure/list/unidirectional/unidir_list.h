@@ -65,6 +65,7 @@ struct unidir_list_api
     void (*insert)(struct list_node *current_node, struct list_node *new_node);
     void (*remove_next)(struct list_node *current_node);
     void (*reverse)(struct list_node *head);
+    bool (*is_empty)(struct list_node *head);
     struct list_node *(*find_loop)(struct list_node *head);
 };
 
