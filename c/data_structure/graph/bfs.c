@@ -92,20 +92,26 @@ static void bfs_find_key(map_t * map, vertex_t *start)
 
     first->vertex.visited = true;
 
-    struct ring_buffer *rb = strfunc_rb.create(sizeof(int) * map->size);
-    int addr = (int)&first->node;
-    strfunc_rb.write(rb, sizeof(int), (uint8_t *)&addr);
+    struct ring_buffer *rb = strfunc_rb.create(sizeof(intptr_t) * map->size);
+    intptr_t addr = (intptr_t)&first->node;
+    strfunc_rb.write(rb, sizeof(intptr_t), (uint8_t *)&addr);
 
     struct list_node *head;
     list_t *actually_node;
-    while(strfunc_rb.read(rb, sizeof(int), (uint8_t *)&addr))
+    while(strfunc_rb.read(rb, sizeof(intptr_t), (uint8_t *)&addr))
     {
+        first = unidir_list_entry((struct list_node *)addr, 
+        list_t, node);
+
+        list_t *cmp;
         for(int i = 0; i < map->size; i++)
         {
-            if(addr == map->array[i].next)
+            cmp = unidir_list_first_entry(&map->array[i], list_t, node);
+            
+            if(strcmp(first->vertex.name, cmp->vertex.name) == 0)
             {
                 head = &map->array[i];
-                printf("head = %p, i = %d\n", head, i);
+                cmp->vertex.visited = true;
                 break;
             }
         }
@@ -121,8 +127,8 @@ static void bfs_find_key(map_t * map, vertex_t *start)
                     printf("%s has the key!\n", actually_node->vertex.name);
                     return;
                 }
-                addr = (int)&actually_node->node;
-                strfunc_rb.write(rb, sizeof(int), (uint8_t *)&addr);
+                addr = (intptr_t)&actually_node->node;
+                strfunc_rb.write(rb, sizeof(intptr_t), (uint8_t *)&addr);
             }
         }
         printf("\n");
