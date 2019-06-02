@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include "ring_buffer.h"
 typedef struct 
 {
     vertex_t vertex;
@@ -68,6 +69,7 @@ static void bfs_print_map(map_t * map)
     {
         printf("array %d: ", i);
 
+        printf("map [%d] = %p\n", i, &map->array[i]);
         unidir_list_for_each_entry(v, &map->array[i], list_t, node)
         {
             printf("[%s], ", v->vertex.name);
@@ -90,23 +92,17 @@ static void bfs_find_key(map_t * map, vertex_t *start)
 
     first->vertex.visited = true;
 
-    struct list_node scan;
- 
-    undir_list.init_obj(&scan);
-    undir_list.insert(&scan, &first->node);
-
-    list_t *actually_node;
+    struct ring_buffer *rb = strfunc_rb.create(sizeof(int) * map->size);
+    int addr = (int)&first->node;
+    strfunc_rb.write(rb, sizeof(int), (uint8_t *)&addr);
 
     struct list_node *head;
-    while(undir_list.is_empty(&scan) == false)
+    list_t *actually_node;
+    while(strfunc_rb.read(rb, sizeof(int), (uint8_t *)&addr))
     {
-        first = unidir_list_first_entry(&scan, list_t, node);
-        undir_list.remove_next(&scan);
         for(int i = 0; i < map->size; i++)
         {
-            actually_node = unidir_list_first_entry(&map->array[i], list_t, node);
-
-            if(strcmp(actually_node->vertex.name, first->vertex.name) == 0)
+            if(addr == map->array[i].next)
             {
                 head = &map->array[i];
                 printf("head = %p, i = %d\n", head, i);
@@ -114,7 +110,6 @@ static void bfs_find_key(map_t * map, vertex_t *start)
             }
         }
 
-        printf("scan start:[%s]\n", actually_node->vertex.name);
         unidir_list_for_each_entry(actually_node, head, list_t, node)
         {
             printf("%s, ", actually_node->vertex.name);
@@ -126,7 +121,8 @@ static void bfs_find_key(map_t * map, vertex_t *start)
                     printf("%s has the key!\n", actually_node->vertex.name);
                     return;
                 }
-                undir_list.insert(&scan, &actually_node->node);
+                addr = (int)&actually_node->node;
+                strfunc_rb.write(rb, sizeof(int), (uint8_t *)&addr);
             }
         }
         printf("\n");
@@ -137,6 +133,7 @@ struct bfs_api bfs;
 void bfs_str_init(void)
 {
     unidir_list_str_init();
+    rb_strinit();
 
     bfs.create_map = bfs_create_map;
     bfs.add_edge = bfs_add_edge;
